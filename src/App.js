@@ -11,10 +11,13 @@ const App = () => {
   // const [message, setMessage] = useState('')
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
+    const fetchBlog = async () => {
+
+      const blogs = await blogService.getAll()
       setBlogs(blogs)
-    )
-  }, [])
+    }
+    fetchBlog()
+    }, [])
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -33,31 +36,36 @@ const App = () => {
   }
 
   const loginForm = () => (
-  <form onSubmit={handleLogin}>
-    <div>
-      username
-      <input type="text" value={username} name="Username" onChange={({ target }) => setUsername(target.value)} />
-    </div>
-    <div>
-      password
-      <input type='text' value={password} name="Password" onChange={({ target }) => setPassword(target.value)} />
-    </div>
-    <button type="submit">login</button>
-  </form>
+    <form onSubmit={handleLogin}>
+      <div>
+        username
+        <input type="text" value={username} name="Username" onChange={({ target }) => setUsername(target.value)} />
+      </div>
+      <div>
+        password
+        <input type='text' value={password} name="Password" onChange={({ target }) => setPassword(target.value)} />
+      </div>
+      <button type="submit">login</button>
+    </form>
   )
 
 
   return (
     <div>
       <h1>Blogs</h1>
-      {user === null && loginForm()}
-      {user && <div>
-        <p>logged in as {user.name}</p>
+      {user === null && <div>
+        <h2>Log in to application</h2>
+        {loginForm()}
       </div>}
-      <h2>blogs</h2>
-      {blogs.map((blog) =>
-        <Blog key={blog.id} blog={blog} />
-      )}
+      {user && <div>
+        <h2>blogs</h2>
+        <p>logged in as {user.name}</p>
+        
+        {blogs.map((blog) =>
+          <Blog key={blog.id} blog={blog} />
+        )}
+      </div>}
+
     </div>
   )
 }
